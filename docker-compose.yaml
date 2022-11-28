@@ -2,13 +2,19 @@ version: "3.8"
 
 services:
   prometheus:
-    image: prom/prometheus
-    ports:
-      - "9090:9090"
+    image: prom/prometheus:latest
     volumes:
       - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
     networks:
       - fullstack
+    ports:
+      - 9090:9090
   # grafana:
   #   image: grafana/grafana-oss:latest
   #   ports:
@@ -35,3 +41,5 @@ services:
 networks:
   fullstack:
     driver: bridge
+volumes:
+  prometheus_data: {}
