@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 )
 
 func main() {
 	r := gin.Default()
 
-	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(r)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
